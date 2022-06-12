@@ -20,7 +20,6 @@
             color: #fff;
             font-weight: 300;
         }
-
         body {
             background: rgba(44, 131, 185, 1);
             background: -moz-linear-gradient(left, rgba(44, 131, 185, 1) 0%, rgba(30, 171, 227, 1) 100%);
@@ -31,23 +30,19 @@
             background: linear-gradient(to right, rgba(44, 131, 185, 1) 0%, rgba(30, 171, 227, 1) 100%);
             filter: progid:DXImageTransform.Microsoft.gradient(startColorstr='#2c83b9', endColorstr='#1eabe3', GradientType=1);
         }
-
         #wrapper {
             background: url(//cdn.jsdelivr.net/gh/bitmovin/bitmovin-player-web-samples@main/images/logo-bg-demopage.png));
             height: 100vh;
         }
-
         #banner {
             border-bottom: 1px solid #fff;
             background-color: #1eabe3;
             width: 100%
         }
-
         #banner h1 {
             margin: 0;
             padding: 30px;
         }
-
         .logo {
             padding: 10px;
             width: 25%;
@@ -55,26 +50,21 @@
             float: left;
             margin: auto;
         }
-
         .title {
             width: 75%;
             white-space: nowrap;
         }
-
         .clear {
             clear: both;
         }
-
         .content {
             margin-bottom: 10em;
         }
-
         h1, h2, h3, p {
             font-weight: 300;
             text-align: center;
             margin: 40px;
         }
-
         #player {
             max-width: 900px;
             width: 90%;
@@ -83,26 +73,21 @@
             -moz-box-shadow: 0px 0px 56px 0px rgba(0, 0, 0, 0.75);
             box-shadow: 0px 0px 56px 0px rgba(0, 0, 0, 0.75);
         }
-
         a {
             color: #97d9ef;
             font-weight: 400;
             text-decoration: none;
         }
-
         a:hover {
             color: #fff;
         }
-        
         .bmpui-ui-watermark {
             display: none;
          }
-
         @media (max-width: 800px) {
             .logo {
                 width: 100%;
             }
-
             .title {
                 display: none;
             }
@@ -131,6 +116,45 @@
     </div>
 </div>
 <script type="text/javascript">
+    var getQualityLabels = function (data) {
+        if (!data.width) {
+            return;
+        }
+        if (data.width >= 1920) {
+            return data.id + ' (Full HD)';
+        }
+        else if (data.width >= 1280) {
+            return data.id + ' (720pHD)';
+        }
+        else if (data.width >= 1024) {
+            return data.id + ' (576p)';
+        }
+        else if (data.width >= 800) {
+            return data.id + ' (450p)';
+        }
+        else {
+            return data.id;
+        }
+    };
+     var getSubtitleLabels = function (data) {
+        if (!data.label) {
+            return;
+        }
+        var label = data.label.toUpperCase() + ' (SubtitleID: ' + data.id + ')';
+        if (data.label === 'en') {
+            return label += ' (original)';
+        }
+        return label;
+    };
+    var getTrackLabels = function (data) {
+        if (!data.mimeType) {
+            return;
+        }
+        if (data.mimeType.indexOf('audio') >= 0) {
+            return data.lang.toUpperCase();
+        }
+        return data.lang;
+    };
     var conf = {
         key: "d8f65027-8877-4cc1-bfa9-3c35001f4c6d", // Generated at: Sat 11 Jun 2022 12:01:21 PM +06
         events: {
@@ -144,27 +168,36 @@
         },
         tweaks : {
             autoqualityswitching : true,
-            max_buffer_level     : 10,
-            timeShiftBufferDepth : 10,
+            max_buffer_level     : 8,
+            timeShiftBufferDepth : 8,
             stop_download_on_pause : true
         },
         buffer: {
             video: {
-                forwardduration: 10,
-                backwardduration: 20,
+                forwardduration: 8,
+                backwardduration: 16,
             },
             audio: {
-                 forwardduration: 10,
-                 backwardduration: 20,
+                 forwardduration: 8,
+                 backwardduration: 16,
             },
         },
     };
     var source = {
-        dash: "//cdn.jsdelivr.net/gh/PH4NTOM-3NCOD3R/1x01_test2@main/1x01.mpd",
+        dash: "//cdn.jsdelivr.net/gh/PH4NTOM-3NCOD3R/1x01_fulltest2@main/1x01.mpd",
+        // hls: "//cdn.jsdelivr.net/gh/PH4NTOM-3NCOD3R/1x01_fulltest2@main/1x01.m3u8",
+        labeling: {
+            dash: {
+                qualities: getQualityLabels,
+                subtitles: getSubtitleLabels,
+                tracks: getTrackLabels
+            }
+        }
+        // source.labeling.hls = source.labeling.dash;
         drm: {
           clearkey: [{
-            key: '7b62b687e5a5c29b8f7c0a974cf0e6a3',
-            kid: '75a73d2db4ebcf5077efdc49bddb19a4' //optional
+            key: '5d12774248c3ebd40df815332a006119',
+            kid: 'b14adca33e84cb4e6164403b4dd905c5' //optional
           }]
         }
     };
